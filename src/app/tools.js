@@ -4,6 +4,7 @@ import { initDrawTool } from '../annotations/drawTool.js';
 import { initImageryBoxTool } from '../ui/imageryBoxTool.js';
 import { createRecentImageryPanel } from '../ui/recentImagery.js';
 import { initGevVoiceCommands } from '../voice/gevRealtime.js';
+import { installJarvisBridge } from '../integrations/jarvis/bridge.js';
 import { installScopeMask, destroyScopeMask } from '../scopeMask.js';
 import {
   installRenderGovernor,
@@ -157,6 +158,10 @@ export function createApplicationTools({
   defer(() => {
     if (window.__godsEyeView === debug) delete window.__godsEyeView;
   });
+  // Optional, off-by-default JARVIS control surface. Does nothing unless the
+  // embedding host set window.__GEV_JARVIS_BRIDGE_ENABLED__ = true before
+  // this script ran — see src/integrations/jarvis/ and JARVIS_INTEGRATION.md.
+  installJarvisBridge(debug, { defer });
   const voiceCommands = initGevVoiceCommands({
     ...voice,
     floorServices: operations.surface.groundFloor,
